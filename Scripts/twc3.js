@@ -3358,17 +3358,6 @@ $(function ()
                 var Index9 = html.substr(Index7 + Index8).indexOf("</div>");
                 var TimeZone = html.substr(Index7 + Index8 + 19, (Index7 + Index8 + Index9) - (Index7 + Index8 + 19)).split(' ')[2];
 
-                //_WeatherParameters = {
-                //    Latitude: Latitude,
-                //    Longitude: Longitude,
-                //    ZoneId: ZoneId,
-                //    RadarId: RadarId,
-                //    StationId: StationId,
-                //    City: City,
-                //    State: State,
-                //    TimeZone: TimeZone,
-                //};
-
                 if (StationId in _StationInfo)
                 {
                     City = _StationInfo[StationId].City;
@@ -3383,7 +3372,6 @@ $(function ()
                 _WeatherParameters.City = City;
                 _WeatherParameters.State = State;
                 _WeatherParameters.TimeZone = TimeZone;
-                //alert(_WeatherParameters.TimeZone);
 
                 //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=-72.971293%2C+40.850043&f=pjson
                 request = $.ajax({
@@ -3436,33 +3424,6 @@ $(function ()
 
                     if (_CallBack) _CallBack({ Status: "WEATHERPARAMETERS", WeatherParameters: _WeatherParameters, });
                 });
-
-                //////GetMoonPhases(_WeatherParameters);
-                ////GetTimeZone(_WeatherParameters);
-
-                ////GetCurrentWeather(_WeatherParameters);
-                //GetMonthPrecipitation(_WeatherParameters);
-                ////GetRegionalStations(_WeatherParameters);
-                //GetTravelWeather(_WeatherParameters); //_TravelCities);
-                //GetAirQuality(_WeatherParameters);
-                ////GetMarineForecast(_WeatherParameters);
-                ////GetWeatherForecast(_WeatherParameters);
-                ////ShowRegionalMap(_WeatherParameters);
-                //ShowRegionalMap(_WeatherParameters, true);
-                //ShowDopplerMap(_WeatherParameters);
-                //GetWeatherHazards3(_WeatherParameters);
-
-                //if (_UpdateWeatherCanvasInterval)
-                //{
-                //    window.clearInterval(_UpdateWeatherCanvasInterval);
-                //}
-                //_UpdateWeatherCanvasInterval = window.setInterval(function ()
-                //{
-                //    UpdateWeatherCanvases(_WeatherParameters);
-                //}, _UpdateWeatherUpdateMs);
-
-                //if (_CallBack) _CallBack({ Status: "WEATHERPARAMETERS", WeatherParameters: _WeatherParameters, });
-
             },
             error: function (xhr, error, errorThrown)
             {
@@ -7449,34 +7410,6 @@ var PopulateHazardConditions = function (WeatherParameters)
 
             var y = -385;
 
-            //window.setInterval(function ()
-            //{
-            //    context.drawImage(cnvHazardsScroll[0], 0, y, 640, 385, 0, 0, 640, 385);
-
-            //    // Wait until the weather has been loaded.
-            //    if (WeatherParameters.Progress.GetTotalPercentage() != 100)
-            //    {
-            //        return;
-            //    }
-
-            //    // Wait 3 seconds and then start scrolling.
-            //    if (_UpdateHazardsCounterMs == 0)
-            //    {
-            //        y = -385;
-            //    }
-            //    if (_UpdateHazardsCounterMs > 0)
-            //    {
-            //        //y += 1;
-            //        y += 5;
-            //    }
-            //    if (y > cnvHazardsScroll.height())
-            //    {
-            //        y = cnvHazardsScroll.height();
-            //        _UpdateHazardsCounterMs = 0;
-            //    }
-
-            //}, _UpdateHazardsInterval);
-
             if (DontLoadGifs == true)
             {
                 UpdateHazards();
@@ -7497,22 +7430,10 @@ var PopulateHazardConditions = function (WeatherParameters)
     };
 
     var HazardsText = divHazards.html();
-
-    //if (_Units == Units.Metric)
-    //{
-    //    HazardsText = ConvertConditionsToMetric(HazardsText);
-    //}
-
     HazardsText = HazardsText.replaceAll("<br>", "\n");
     HazardsText = HazardsText.replaceAll("<br/>", "\n");
     HazardsText = HazardsText.replaceAll("<br />", "\n");
     HazardsText = HazardsText.replaceAll("<br></br>", "\n");
-    //HazardsText = HazardsText.replaceAll("\n\n", "\?");
-    //HazardsText = HazardsText.replaceAll("\n", " ");
-    //HazardsText = HazardsText.replaceAll("\?", "\n\n");
-//    var HazardsWrapped = HazardsText.wordWrap(32);
-    //var HazardsWrapped = HazardsText.trim().replace(/(\S(.{0,32}\S)?)\s+/g, '$1\n');
-    //HazardsWrapped = HazardsWrapped.replaceAll("\?", "\n");
 
     WeatherHazardConditions.HazardsText = HazardsText;
     WeatherHazardConditions.HazardsTextC = ConvertConditionsToMetric(HazardsText);
@@ -7577,7 +7498,6 @@ var PopulateHazardConditions = function (WeatherParameters)
         DrawHazards();
     };
     ShowHazardsScroll();
-
 };
 
 var UpdateHazards = function (Offset)
@@ -7611,28 +7531,6 @@ var UpdateHazards = function (Offset)
 
     DrawBox(context, "rgb(112, 35,35)", 0, 0, 640, 385);
     context.drawImage(cnvHazardsScroll[0], 0, _UpdateHazardsY, 640, 385, 0, 0, 640, 385);
-
-    //    // Wait until the weather has been loaded.
-    //    if (WeatherParameters.Progress.GetTotalPercentage() != 100)
-    //    {
-    //        return;
-    //    }
-
-    //    // Wait 3 seconds and then start scrolling.
-    //    if (_UpdateHazardsCounterMs == 0)
-    //    {
-    //        y = -385;
-    //    }
-    //    if (_UpdateHazardsCounterMs > 0)
-    //    {
-    //        //y += 1;
-    //        y += 5;
-    //    }
-    //    if (y > cnvHazardsScroll.height())
-    //    {
-    //        y = cnvHazardsScroll.height();
-    //        _UpdateHazardsCounterMs = 0;
-    //    }
 };
 
 String.prototype.wordWrap =  function (intWidth, strBreak, cut)
@@ -7687,266 +7585,18 @@ String.prototype.wordWrap =  function (intWidth, strBreak, cut)
     return r.join('\n').replaceAll("\n ", "\n");
 };
 
-//var wordwrap = function (long_string, max_char)
-//{
-
-//    var sum_length_of_words = function (word_array)
-//    {
-//        var out = 0;
-//        if (word_array.length != 0)
-//        {
-//            for (var i = 0; i < word_array.length; i++)
-//            {
-//                var word = word_array[i];
-//                out = out + word.length;
-//            }
-//        };
-//        return out;
-//    }
-
-//    var split_out = [[]];
-//    var split_string = long_string.split(' ');
-//    for (var i = 0; i < split_string.length; i++)
-//    {
-//        var word = split_string[i];
-
-//        if ((sum_length_of_words(split_out[split_out.length - 1]) + word.length) > max_char)
-//        {
-//            split_out = split_out.concat([[]]);
-//        }
-
-//        split_out[split_out.length - 1] = split_out[split_out.length - 1].concat(word);
-//    }
-
-//    for (var i = 0; i < split_out.length; i++)
-//    {
-//        split_out[i] = split_out[i].join(" ");
-//    }
-
-//    return split_out.join('\n');
-//};
-
-//function wordwrap(str, width, brk, cut)
-//{
-
-//    brk = brk || 'n';
-//    width = width || 75;
-//    cut = cut || false;
-
-//    if (!str) { return str; }
-
-//    var regex = '.{1,' + width + '}(\s|$)' + (cut ? '|.{' + width + '}|.+$' : '|\S+?(\s|$)');
-
-//    return str.match(RegExp(regex, 'g')).join(brk);
-
-//}
-
 String.prototype.replaceAll = function (search, replacement)
 {
     var target = this;
     return target.split(search).join(replacement);
 };
 
-//String.prototype.wordWrap = function (maxWidth)
-//{
-//    var str = this;
-//    var testWhite = function (x)
-//    {
-//        var white = new RegExp(/^\s$/);
-//        return white.test(x.charAt(0));
-//    };
-
-//    var newLineStr = "\n"; done = false; res = '';
-//    do
-//    {
-//        found = false;
-//        // Inserts new line at first whitespace of the line
-//        for (i = maxWidth - 1; i >= 0; i--)
-//        {
-//            if (testWhite(str.charAt(i)))
-//            {
-//                res = res + [str.slice(0, i), newLineStr].join('');
-//                str = str.slice(i + 1);
-//                found = true;
-//                break;
-//            }
-//        }
-//        // Inserts new line at maxWidth position, the word is too long to wrap
-//        if (!found)
-//        {
-//            res += [str.slice(0, maxWidth), newLineStr].join('');
-//            str = str.slice(maxWidth);
-//        }
-
-//        if (str.length < maxWidth)
-//            done = true;
-//    } while (!done);
-
-//    return res + str;
-//}
-
-
 var GetLatLng = function (Url)
 {
-    //alert(window.maxConnectionsPerServer);
-    //window.maxConnectionsPerServer = 100;
-    //alert(window.maxConnectionsPerServer);
-
-    //$.ajax({
-    //    type: "GET",
-    //    url: "1" + Url,
-    //    dataType: "html",
-    //    crossDomain: true,
-    //    cache: false,
-    //    success: function (html)
-    //    {
-    //        //"http://forecast.weather.gov/MapClick.php?lat=40.8224&lon=-72.9847"
-    //        //var RadarId = getParameterByName("site", ResponseURL);
-
-    //        var Latitude = getParameterByName("lat", Url);
-    //        var Longitude = getParameterByName("lon", Url);
-
-    //        //divLat.html("Latitude: " + Latitude);
-    //        //divLng.html("Longitude: " + Longitude);
-
-    //        //MapClick.php?zoneid=NYZ078
-    //        var Index1 = html.indexOf("MapClick.php?zoneid=");
-    //        var ZoneId = html.substr(Index1 + 20, 6);
-
-    //        ////obhistory/KHWV.html
-    //        //var Index2 = html.indexOf("obhistory/");
-    //        //var StationId = html.substr(Index2 + 10, 4);
-    //        var Index2_1 = html.indexOf(")</h2>");
-    //        var Index2 = html.lastIndexOf("(", Index2_1);
-    //        var StationId = html.substr(Index2 + 1, Index2_1 - (Index2 + 1));
-
-    //        //a:"OKX"
-    //        var Index3 = html.indexOf("a:\"");
-    //        var RadarId = html.substr(Index3 + 3, 3).toUpperCase();
-
-    //        //<div id="about_forecast">
-    //        //<div class="fullRow">
-    //        //                <div class="left">Point Forecast:</div>
-    //        //                <div class="right">Medford NY<br>&nbsp;40.81&deg;N 72.99&deg;W (Elev. 79 ft)</div>
-    //        //                    </div>
-    //        var Index4 = html.indexOf("<div id=\"about_forecast\">");
-    //        var Index5 = html.substr(Index4).indexOf("<br>");
-    //        var Index6 = html.substr(Index4, Index5).lastIndexOf("<div") + Index4;
-    //        var City = html.substr(Index6 + 19, (Index5 + Index4 - 3) - (Index6 + 19));
-    //        var State = html.substr(Index6 + 19 + City.length + 1, (Index5 + Index4) - (Index6 + 19 + City.length + 1));
-
-    //        //<div class="fullRow">
-    //        //    <div class="left"><a target="_blank" href="http://www.weather.gov/glossary/index.php?word=Last+update">Last Update</a>: </div>
-    //        //    <div class="right">6:01 pm HST Dec 25, 2016</div>
-    //        //</div>
-    //        var Index7 = html.indexOf("Last Update</a>");
-    //        var Index8 = html.substr(Index7).indexOf("<div class=\"right\">");
-    //        var Index9 = html.substr(Index7 + Index8).indexOf("</div>");
-    //        var TimeZone = html.substr(Index7 + Index8 + 19, (Index7 + Index8 + Index9) - (Index7 + Index8 + 19)).split(' ')[2];
-
-    //        //_WeatherParameters = {
-    //        //    Latitude: Latitude,
-    //        //    Longitude: Longitude,
-    //        //    ZoneId: ZoneId,
-    //        //    RadarId: RadarId,
-    //        //    StationId: StationId,
-    //        //    City: City,
-    //        //    State: State,
-    //        //    TimeZone: TimeZone,
-    //        //};
-
-    //        _WeatherParameters.Latitude = Latitude;
-    //        _WeatherParameters.Longitude = Longitude;
-    //        _WeatherParameters.ZoneId = ZoneId;
-    //        _WeatherParameters.RadarId = RadarId;
-    //        _WeatherParameters.StationId = StationId;
-    //        _WeatherParameters.City = City;
-    //        _WeatherParameters.State = State;
-    //        _WeatherParameters.TimeZone = TimeZone;
-            
-    //        _WeatherParameters.Progress = new Progress({
-    //            WeatherParameters: _WeatherParameters,
-    //            OnLoad: function ()
-    //            {
-    //                ////GetMoonPhases(_WeatherParameters);
-    //                //GetTimeZone(_WeatherParameters);
-
-    //                //GetCurrentWeather(_WeatherParameters);
-    //                GetMonthPrecipitation(_WeatherParameters);
-    //                //GetRegionalStations(_WeatherParameters);
-    //                GetTravelWeather(_WeatherParameters); //_TravelCities);
-    //                GetWeatherForecast(_WeatherParameters);
-    //                //ShowRegionalMap(_WeatherParameters);
-    //                ShowRegionalMap(_WeatherParameters, true);
-    //                ShowDopplerMap(_WeatherParameters);
-    //                GetWeatherHazards3(_WeatherParameters);
-    //            },
-    //        });
-
-    //        //var WeatherCanvases = [];
-    //        //WeatherCanvases.push(canvasProgress);
-    //        //WeatherCanvases.push(canvasCurrentWeather);
-    //        //WeatherCanvases.push(canvasLatestObservations);
-    //        //WeatherCanvases.push(canvasTravelForecast);
-    //        //WeatherCanvases.push(canvasRegionalForecast);
-    //        //WeatherCanvases.push(canvasRegionalObservations);
-    //        //WeatherCanvases.push(canvasAlmanac);
-    //        //WeatherCanvases.push(canvasLocalForecast);
-    //        //WeatherCanvases.push(canvasExtendedForecast);
-    //        //WeatherCanvases.push(canvasHazards);
-    //        //WeatherCanvases.push(canvasLocalRadar);
-    //        //_WeatherParameters.WeatherCanvases = WeatherCanvases;
-
-    //        //$(WeatherCanvases).each(function ()
-    //        //{
-    //        //    var WeatherCanvas = $(this);
-    //        //    WeatherCanvas.css("position", "absolute");
-    //        //    WeatherCanvas.css("top", "0px");
-    //        //    WeatherCanvas.css("left", "0px");
-    //        //    WeatherCanvas.hide();
-    //        //});
-    //        //canvasProgress.show();
-
-    //        //if (_UpdateWeatherCanvasInterval)
-    //        //{
-    //        //    window.clearInterval(_UpdateWeatherCanvasInterval);
-    //        //}
-    //        //_UpdateWeatherCanvasInterval = window.setInterval(function ()
-    //        //{
-    //        //    UpdateWeatherCanvases(_WeatherParameters);
-    //        //}, _UpdateWeatherUpdateMs);
-
-    //        //_WeatherParameters.TravelCities = _TravelCities
-
-    //        //////GetMoonPhases(_WeatherParameters);
-    //        ////GetTimeZone(_WeatherParameters);
-
-    //        //GetRegionalStations(_WeatherParameters);
-    //        //GetTravelWeather(_WeatherParameters); //_TravelCities);
-    //        //GetCurrentWeather(_WeatherParameters);
-    //        //GetMonthPrecipitation(_WeatherParameters);
-    //        //ShowRegionalMap(_WeatherParameters);
-    //        //ShowRegionalMap(_WeatherParameters, true);
-    //        //ShowDopplerMap(_WeatherParameters);
-    //        //GetWeatherHazards3(_WeatherParameters);
-    //    },
-    //    error: function (xhr, error, errorThrown)
-    //    {
-    //        console.error("GetLatLng failed: " + errorThrown);
-    //    }
-    //});
-
+    console.log(Url);
     _Url = Url;
-
-
-
 };
 
-//var WeatherMonthlyTotalsParser = function (html)
-//{
-//    this.Precipitation = html.find("span:contains(Precipitation)").parent().parent().children().eq(4).find(".wx-value").text();
-//};
-//var WeatherMonthlyTotalsParser = function (json) {
 var WeatherMonthlyTotalsParser = function (text) {
     this.Precipitation = "";
 

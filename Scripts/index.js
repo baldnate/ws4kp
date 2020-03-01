@@ -11,7 +11,6 @@ var frmGetLatLng;
 var txtAddress;
 var btnGetLatLng;
 var btnClearQuery;
-var btnGetGps;
 var divLat;
 var spanLat;
 var divLng;
@@ -970,6 +969,7 @@ $(function ()
         txtAddress.select();
     });
 
+    txtAddress.blur();
     txtAddress.focus();
 
     $(".NavigateMenu").on("click", btnNavigateMenu_click);
@@ -982,9 +982,6 @@ $(function ()
 
     $(".ToggleNarration").on("click", btnNarrationPlay_click);
 
-    $(btnGetGps).on("click", btnGetGps_click);
-
-    //$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', OnFullScreen);
     $(window).on("resize", OnFullScreen);
     $(window).on("resize", window_resize);
     $(document).on("mousemove", document_mousemove);
@@ -1068,47 +1065,23 @@ $(function ()
 		        Url =  'http://' + domain + '/MapClick.php' + query;
 		    }
 		    Url = "cors/?u=" + encodeURIComponent(Url);
-
-		    //GetLatLng(Url);
-
-		    //// First clear the iframe
-		    //iframeTwc.on("load", function (e)
-		    //{
-		    //    //console.log("loaded...");
-
-		    //    switch (iframeTwc.attr("src"))
-		    //    {
-		    //        case "about:blank":
-		    //            iframeTwc.attr("src", "twc3.html?_=" + (new Date).getTime().toString());
-		    //            //iframeTwc.attr("src", "twc3.html?a");
-		    //            break;
-
-		    //            //case "twc3.html":
-            //        default:
-		    //            iframeTwc.off("load");
-		    //            iframeTwc[0].contentWindow.GetLatLng(Url);
-		    //            break;
-		    //    }
-		    //});
-		    //iframeTwc.attr("src", "about:blank");
 		    LoadTwcData(Url);
 
 		    // Save the query
 		    localStorage.setItem("TwcQuery", txtAddress.val());
-
 		};
 
     var PreviousSeggestionValue = null;
     var PreviousSeggestion = null;
     var OnSelect = function (suggestion)
     {
+        console.log(suggestion);
+        suggestion = {
+            "value": "78759, Austin, TX, USA",
+            "data": "dHA9MCNsb2M9NjY2OTMyNCNsbmc9MzMjcGw9MjQwMDM0NyNsYnM9MTQ6Mjk2MDQxOQ=="
+          };
         var request;
 
-        // Do not auto get the same city twice.
-        if (PreviousSeggestionValue == suggestion.value)
-        {
-            return;
-        }
         PreviousSeggestionValue = suggestion.value;
         PreviousSeggestion = suggestion;
 
@@ -1142,7 +1115,7 @@ $(function ()
             });
         }
     };
-
+    
     $("#frmGetLatLng #txtAddress").devbridgeAutocomplete({
         serviceUrl: location.protocol + '//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest',
         deferRequestBy: 300,
@@ -1165,7 +1138,7 @@ $(function ()
                 }, 1);
             }
 
-            return {
+            retval = {
                 suggestions: $.map(response.suggestions, function (i)
                 {
                     return {
@@ -1174,6 +1147,7 @@ $(function ()
                     };
                 })
             };
+            return retval;
         },
         minChars: 3,
         showNoSuggestionNotice: true,
@@ -1201,6 +1175,8 @@ $(function ()
         return false;
     });
 
+    OnSelect("");
+
     // Auto load the previous query
     var TwcQuery = localStorage.getItem("TwcQuery");
     if (TwcQuery)
@@ -1217,17 +1193,11 @@ $(function ()
         _IsPlaying = true;
     }
 
-    var TwcAudioPlay = localStorage.getItem("TwcAudioPlay");
-    if (!TwcAudioPlay || TwcAudioPlay == "true")
-    {
-        _IsAudioPlaying = true;
-    }
+    var TwcAudioPlay = false;
+    _IsAudioPlaying = false;
 
-    var TwcNarrationPlay = localStorage.getItem("TwcNarrationPlay");
-    if (TwcNarrationPlay == "true")
-    {
-        _IsNarrationPlaying = true;
-    }
+    var TwcNarrationPlay = false;
+    _IsNarrationPlaying = false;
 
     var TwcScrollText = localStorage.getItem("TwcScrollText");
     if (TwcScrollText)
@@ -1411,58 +1381,6 @@ var StopAutoRefreshTimer = function ()
         spanRefreshCountDown.html("--:--");
         _AutoRefreshIntervalId = null;
     }
-};
-
-var btnGetGps_click = function ()
-{
-    if (!navigator.geolocation)
-    {
-        return;
-    }
-
-    var CurrentPosition = function (Position)
-    {
-        var Latitude = Position.coords.latitude;
-        var Longitude = Position.coords.longitude;
-        //Latitude = 40.7754622; Longitude = -73.2411506;
-
-        console.log("Latitude: " + Latitude + "; Longitude: " + Longitude);
-
-        //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=-72.971293%2C+40.850043&f=pjson
-        request = $.ajax({
-            url: location.protocol + '//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode',
-            data: {
-                location: Longitude + "," + Latitude,
-                distance: 1000, // Find location upto 1 KM.
-                f: 'json'
-            },
-            jsonp: 'callback',
-            dataType: 'jsonp'
-        });
-        request.done(function (data)
-        {
-            console.log(data);
-
-            var ZipCode = data.address.Postal;
-            var City = data.address.City;
-            var State = getStateTwoDigitCode(data.address.Region);
-            var Country = data.address.CountryCode;
-            var TwcQuery = ZipCode + ", " + City + ", " + State + ", " + Country;
-            //var Url = "http://forecast.weather.gov/MapClick.php?lat=" + Latitude + "&lon=" + Longitude;
-
-            txtAddress.val(TwcQuery);
-            txtAddress.blur();
-            txtAddress.focus();
-
-            // Save the query
-            localStorage.setItem("TwcQuery", TwcQuery);
-
-            //LoadTwcData(Url);
-        });
-
-    };
-
-    navigator.geolocation.getCurrentPosition(CurrentPosition);
 };
 
 var PopulateWeatherParameters = function ()
