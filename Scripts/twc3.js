@@ -513,149 +513,6 @@ var GetMonthPrecipitation = function (WeatherParameters) {
     });
 };
 
-var GetTideInfo = function (WeatherParameters)
-{
-    var Url = "https://tidesandcurrents.noaa.gov/tide_predictions.html?type=Tide+Predictions&searchfor="; //[Latitude]%2C[Longitude]";
-    Url += WeatherParameters.Latitude + "%2C";
-    Url += WeatherParameters.Longitude;
-
-    var MaxStationCount = 2;
-    var StationCount = 0;
-    var TideInfoCount = 0;
-
-    WeatherParameters.WeatherTides = null;
-
-    // Load the xml file using ajax 
-    $.ajaxCORS({
-        type: "GET",
-        url: Url,
-        dataType: "html",
-        crossDomain: true,
-        cache: false,
-        success: function (html)
-        {
-            var $html = $(html);
-            $html.find("[src]").attr("src", ""); // Prevents the browser from loading any images on this page.
-
-            var StationIds = $html.find("a[href*='Stationid=']");
-
-            if (StationIds.length == 0)
-            {
-                // No tide stations available for this location.
-                PopulateAlmanacInfo(_WeatherParameters);
-                GetCurrentWeather(WeatherParameters);
-                ShowRegionalMap(_WeatherParameters);
-                return;
-            }
-
-            StationIds.each(function ()
-            {
-                var Link = $(this);
-                var StationName = Link.text();
-                var Href = Link.attr("href");
-                var StationId = Href.substr(Href.indexOf("Stationid=") + 10);
-
-                var Url = "https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid=";
-                Url += StationId;
-
-                if (WeatherParameters.WeatherTides == null)
-                {
-                    WeatherParameters.WeatherTides = [];
-                }
-
-                var WeatherTide = {
-                    StationId: StationId,
-                };
-                WeatherTide.StationName = StationName;
-                WeatherParameters.WeatherTides.push(WeatherTide);
-
-                // Load the xml file using ajax 
-                $.ajaxCORS({
-                    type: "GET",
-                    url: Url,
-                    dataType: "html",
-                    crossDomain: true,
-                    cache: false,
-                    success: function (html)
-                    {
-                        var $html = $(html);
-                        $html.find("[src]").attr("src", ""); // Prevents the browser from loading any images on this page.
-
-                        var TideTypes = [];
-                        var TideTimes = [];
-                        var TideDays = [];
-
-                        $html.find(".hilow").find("tr").each(function (Index)
-                        {
-                            if (Index > 3)
-                            {
-                                return false;
-                            }
-
-                            var TideRow = $(this);
-                            var TideHeight = $(TideRow.find("td")[3]).text().trim();
-
-                            if (TideHeight.indexOf("H") != -1)
-                            {
-                                TideTypes.push("high");
-                            }
-                            else
-                            {
-                                TideTypes.push("low");
-                            }
-
-                            TideTimes.push($(TideRow.find("td")[2]).text().trim());
-                            TideDays.push($(TideRow.find("td")[1]).text());
-                        });
-
-                        $(TideTimes).each(function(Index)
-                        {
-                            var TideTime = this.toString();
-                            TideTime = TideTime.replaceAll(" AM", "am");
-                            TideTime = TideTime.replaceAll(" PM", "pm");
-
-                            if (TideTime.startsWith("0") == true)
-                            {
-                                TideTime = TideTime.substr(1);
-                            }
-
-                            TideTimes[Index] = TideTime;
-                        });
-
-                        WeatherTide.TideTypes = TideTypes;
-                        WeatherTide.TideTimes = TideTimes;
-                        WeatherTide.TideDays = TideDays;
-
-                        TideInfoCount++;
-                        if (TideInfoCount >= MaxStationCount)
-                        {
-                            PopulateTideInfo(WeatherParameters);
-
-                            PopulateAlmanacInfo(_WeatherParameters);
-                            GetCurrentWeather(WeatherParameters);
-                            ShowRegionalMap(_WeatherParameters);
-                        }
-                    },
-                    error: function (xhr, error, errorThrown)
-                    {
-                        console.error("GetTideInfo failed: " + errorThrown);
-                    }
-                });
-
-                StationCount++;
-                if (StationCount >= MaxStationCount)
-                {
-                    return false;
-                }
-            });
-        },
-        error: function (xhr, error, errorThrown)
-        {
-            console.error("GetTideInfo failed: " + errorThrown);
-        }
-    });
-};
-
 var GetTideInfo2 = function (WeatherParameters) {
     var Url = "https://tidesandcurrents.noaa.gov/mdapi/latest/webapi/tidepredstations.json?"; //lat=40&lon=-73&radius=50";
     Url += "lat=" + WeatherParameters.Latitude + "&";
@@ -1782,68 +1639,6 @@ var DrawWaves = function (context, x, y, color, conditions)
 
 };
 
-var GetAirQuality = function (WeatherParameters)
-{
-    //http://airquality.weather.gov/probe_aq_data.php?latitude=40.850043&longitude=-72.971293
-    var Url = "http://airquality.weather.gov/probe_aq_data.php?latitude=";
-    Url += encodeURIComponent(WeatherParameters.Latitude) + "&longitude=";
-    Url += encodeURIComponent(WeatherParameters.Longitude);
-
-    WeatherParameters.AirQuality = null;
-
-    // Load the xml file using ajax 
-    $.ajaxCORS({
-        type: "GET",
-        url: Url,
-        dataType: "html",
-        crossDomain: true,
-        cache: false,
-        success: function (html)
-        {
-            var $html = $(html);
-            $html.find("[src]").attr("src", ""); // Prevents the browser from loading any images on this page.
-
-            var tdDate = $($html.find("td[bgcolor='#E1E2FE']")[0]);
-            var tdPpb = $($html.find("td[bgcolor='CCCCCC']")[1]);
-            var date = new Date();
-            var ppb = tdPpb.text();
-            var h3 = $html.find("h3");
-            var CityAndState = h3.text().replaceAll("Air Quality Forecast Guidance for ", "");
-            var CityAndStateArray = CityAndState.split(", ");
-            var City = CityAndStateArray[0];
-            var State = CityAndStateArray[1];
-            var IndexValue = 0;
-
-            var AirQuality = {};
-            
-            if (tdDate.text().indexOf("Tomorrow") != -1)
-            {
-                date = date.addDays(1);
-            }
-
-            IndexValue = AQIOzone8hr(ppb);
-
-            AirQuality.City = City;
-            AirQuality.State = State;
-            AirQuality.Date = date;
-            AirQuality.Ppb = parseInt(ppb);
-            AirQuality.IndexValue = IndexValue;
-            
-            WeatherParameters.AirQuality = AirQuality;
-
-            PopulateAirQuality(WeatherParameters);
-
-            GetMarineForecast(WeatherParameters);
-        },
-        error: function (xhr, error, errorThrown)
-        {
-            console.error("GetAirQuality failed: " + errorThrown);
-
-            GetMarineForecast(WeatherParameters);
-        }
-    });
-};
-
 var AQIOzone8hr = function (Concentration)
 {
     var Conc = parseFloat(Concentration);
@@ -2157,27 +1952,6 @@ var ConvertTimeTo24Hour = function (Time)
     FormatedTime = HH + ":" + MM;
 
     return FormatedTime;
-};
-
-var GetTimeZone = function (WeatherParameters)
-{
-    var Now = new Date();
-
-    jeoquery.getGeoNames(
-        "timezone",
-        { lat: WeatherParameters.Latitude.toString(), lng: WeatherParameters.Longitude.toString() },
-        function (data)
-        {
-            WeatherParameters.TimeZoneOffsetDst = data.dstOffset;
-            WeatherParameters.TimeZoneOffsetGmt = data.gmtOffset;
-
-            GetMoonPhases(WeatherParameters);
-        },
-        function (errorThrown)
-        {
-            console.error("GetTimeZone failed: " + errorThrown);
-            WeatherParameters.Progress.Almanac = LoadStatuses.Failed;
-        });
 };
 
 var GetMoonPhases = function (WeatherParameters)
@@ -4522,10 +4296,6 @@ var ConvertKnotsToMph = function (Knots)
 {
     return Math.round(parseFloat(Knots) * 1.15078);
 };
-var ConvertKontsToKph = function (Knots)
-{
-    return Math.round(parseFloat(Knots) * 1.852);
-};
 var ConvertMphToKph = function (Mph)
 {
     return Math.round(parseFloat(Mph) * 1.60934);
@@ -6209,12 +5979,6 @@ String.prototype.replaceAll = function (search, replacement)
 {
     var target = this;
     return target.split(search).join(replacement);
-};
-
-var GetLatLng = function (Url)
-{
-    console.log(Url);
-    _Url = Url;
 };
 
 var WeatherMonthlyTotalsParser = function (text) {
