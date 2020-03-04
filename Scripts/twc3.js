@@ -2895,7 +2895,7 @@ $.fn.scrollIntoView = function ()
 };
 
 
-var _PlayInterval = 100;
+var _PlayInterval = 33;
 var _PlayMs = 0;
 var _PlayMsOffsets = {
     Start: 0,
@@ -3410,7 +3410,7 @@ var UpdatePlayPosition = function ()
         }
         if (SubMs >= 3000)
         {
-            _UpdateTravelCitiesY = 3 * ((SubMs - 3000) / _PlayInterval);
+            _UpdateTravelCitiesY = 1 * ((SubMs - 3000) / _PlayInterval);
         }
         if (_UpdateTravelCitiesY > cnvTravelCitiesScroll.height() - 289)
         {
