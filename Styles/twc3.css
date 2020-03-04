@@ -2,8 +2,6 @@
 {
     font-family: "Star4000";
     src: url('../fonts/Star4000.woff') format('woff');
-    /*font-weight: bold;
-    font-style: italic;*/
 }
 @font-face 
 {
@@ -64,25 +62,13 @@ input
     font-size: 20px;
 }
 
-#tblLocalForcast
-{
-    /*width: 500px;
-    height: 280px;
-    font-size: 20px;*/
-}
-
 #tblHazards
 {
-    /*width: 500px;
-    height: 280px;
-    font-size: 20px;*/
     color: #ff0000;
 }
 
 #tblRegionalForecastMap, #tblRegionalCurrentMap, #tblDopplerRadarMap
 {
-    /*width: 640px;*/
-    /*height: 312px;*/
     border: 1px solid #000000;
     border-spacing: 0px;
 }
@@ -142,12 +128,6 @@ jsgif
     position: absolute;
 }
 
-#canvasProgress
-{
-    /*width: 640px;*/
-    /*height: 480px;*/
-    /*color: #1c0a57;*/
-}
 #canvasBackGroundDateTime, #canvasBackGroundCurrentConditions
 {
     display: none;
