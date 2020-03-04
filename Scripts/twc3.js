@@ -5981,6 +5981,12 @@ String.prototype.replaceAll = function (search, replacement)
     return target.split(search).join(replacement);
 };
 
+var GetLatLng = function (Url)
+{
+    console.log(Url);
+    _Url = Url;
+};
+
 var WeatherMonthlyTotalsParser = function (text) {
     this.Precipitation = "";
 
