@@ -63,4 +63,4 @@ this.onmessage = function (e)
 
             break;
     }
-}
+};

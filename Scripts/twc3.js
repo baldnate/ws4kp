@@ -265,9 +265,9 @@ var GetCurrentWeather = function(WeatherParameters)
         WeatherParameters.WeatherDwmlParser = new WeatherDwmlParser($xml);
         console.log(WeatherParameters.WeatherDwmlParser);
 
-        if (WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.conditions_icon.icon_link.length == 0
-            || WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.conditions_icon.icon_link[0] == "NULL"
-            || WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.temperature_apparent.value[0] == "NA")
+        if (WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.conditions_icon.icon_link.length == 0 ||
+            WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.conditions_icon.icon_link[0] == "NULL" ||
+            WeatherParameters.WeatherDwmlParser.data_current_observations.parameters.temperature_apparent.value[0] == "NA")
         {
             console.error("No current conditions data for '" + WeatherParameters.WeatherDwmlParser.data_current_observations.location.area_description + "'");
 
@@ -1303,7 +1303,7 @@ var GetMarineForecast = function (WeatherParameters)
                             MarineForecast.Warning = MarineForecast.Warning.substr(0, Index);
                         }
 
-                        var Index = MarineForecast.Warning.indexOf(" IN EFFECT");
+                        Index = MarineForecast.Warning.indexOf(" IN EFFECT");
                         if (Index != -1)
                         {
                             MarineForecast.Warning = MarineForecast.Warning.substr(0, Index);
@@ -1420,7 +1420,7 @@ var GetMarineForecast = function (WeatherParameters)
                                     }
                                     else if (isNaN(WindSpeedHigh) == true)
                                     {
-                                        WindSpeedHigh = WindSpeedLow
+                                        WindSpeedHigh = WindSpeedLow;
                                     }
                                 }
                             }
@@ -1630,18 +1630,18 @@ var PopulateMarineForecast = function (WeatherParameters)
 
         var TodayTideHigh = 0;
         var TodayTideLow = 0;
-        var TideUnit = "";
+        var TodayTideUnit = "";
         switch (_Units)
         {
             case Units.English:
                 TodayTideHigh = MarineForecast.TodayTideHigh;
                 TodayTideLow = MarineForecast.TodayTideLow;
-                TideUnit = "'";
+                TodayTideUnit = "'";
                 break;
             case Units.Metric:
                 TodayTideHigh = MarineForecast.TodayTideHighC;
                 TodayTideLow = MarineForecast.TodayTideLowC;
-                TideUnit = "m";
+                TodayTideUnit = "m";
                 break;
         }
 
@@ -1689,18 +1689,18 @@ var PopulateMarineForecast = function (WeatherParameters)
 
         var TomorrowTideHigh = 0;
         var TomorrowTideLow = 0;
-        var TideUnit = "";
+        var TomorrowTideUnit = "";
         switch (_Units)
         {
             case Units.English:
                 TomorrowTideHigh = MarineForecast.TomorrowTideHigh;
                 TomorrowTideLow = MarineForecast.TomorrowTideLow;
-                TideUnit = "'";
+                TomorrowTideUnit = "'";
                 break;
             case Units.Metric:
                 TomorrowTideHigh = MarineForecast.TomorrowTideHighC;
                 TomorrowTideLow = MarineForecast.TomorrowTideLowC;
-                TideUnit = "m";
+                TomorrowTideUnit = "m";
                 break;
         }
 
@@ -1733,49 +1733,49 @@ var DrawWaves = function (context, x, y, color, conditions)
         case "LIGHT":
             y -= 10;
             context.beginPath();
-            context.arc(x, y, 35, Math.PI * .3, Math.PI * .7);
+            context.arc(x, y, 35, Math.PI * 0.3, Math.PI * 0.7);
             context.strokeStyle = color;
             context.lineWidth = 4;
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 35, Math.PI * .3, Math.PI * .7);
+            context.arc(x, y, 35, Math.PI * 0.3, Math.PI * 0.7);
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 35, Math.PI * .3, Math.PI * .7);
+            context.arc(x, y, 35, Math.PI * 0.3, Math.PI * 0.7);
             context.stroke();
             break;
 
         case "CHOPPY":
             context.beginPath();
-            context.arc(x, y, 25, Math.PI * .2, Math.PI * .8);
+            context.arc(x, y, 25, Math.PI * 0.2, Math.PI * 0.8);
             context.strokeStyle = color;
             context.lineWidth = 4;
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 25, Math.PI * .2, Math.PI * .8);
+            context.arc(x, y, 25, Math.PI * 0.2, Math.PI * 0.8);
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 25, Math.PI * .2, Math.PI * .8);
+            context.arc(x, y, 25, Math.PI * 0.2, Math.PI * 0.8);
             context.stroke();
             break;
 
         case "ROUGH":
             context.beginPath();
-            context.arc(x, y, 20, Math.PI * .1, Math.PI * .9);
+            context.arc(x, y, 20, Math.PI * 0.1, Math.PI * 0.9);
             context.strokeStyle = color;
             context.lineWidth = 4;
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 20, Math.PI * .1, Math.PI * .9);
+            context.arc(x, y, 20, Math.PI * 0.1, Math.PI * 0.9);
             context.stroke();
             context.beginPath();
             x += 40;
-            context.arc(x, y, 20, Math.PI * .1, Math.PI * .9);
+            context.arc(x, y, 20, Math.PI * 0.1, Math.PI * 0.9);
             context.stroke();
             break;
     }
@@ -1851,27 +1851,27 @@ var AQIOzone8hr = function (Concentration)
     var AQI;
     c = (Math.floor(Conc)) / 1000;
 
-    if (c >= 0 && c < .055)
+    if (c >= 0 && c < 0.055)
     {
         AQI = Linear(50, 0, 0.054, 0, c);
     }
-    else if (c >= .055 && c < .071)
+    else if (c >= 0.055 && c < 0.071)
     {
-        AQI = Linear(100, 51, .070, .055, c);
+        AQI = Linear(100, 51, 0.070, 0.055, c);
     }
-    else if (c >= .071 && c < .086)
+    else if (c >= 0.071 && c < 0.086)
     {
-        AQI = Linear(150, 101, .085, .071, c);
+        AQI = Linear(150, 101, 0.085, 0.071, c);
     }
-    else if (c >= .086 && c < .106)
+    else if (c >= 0.086 && c < 0.106)
     {
-        AQI = Linear(200, 151, .105, .086, c);
+        AQI = Linear(200, 151, 0.105, 0.086, c);
     }
-    else if (c >= .106 && c < .201)
+    else if (c >= 0.106 && c < 0.201)
     {
-        AQI = Linear(300, 201, .200, .106, c);
+        AQI = Linear(300, 201, 0.200, 0.106, c);
     }
-    else if (c >= .201 && c < .605)
+    else if (c >= 0.201 && c < 0.605)
     {
         AQI = "O3message";
     }
@@ -3191,7 +3191,7 @@ var _PlayMsOffsets = {
     Hazards_End: 0,
     Hazards_Length: 0,
     Hazards_Loaded: false,
-}
+};
 
 var AssignPlayMsOffsets = function (CalledFromProgress)
 {
@@ -3202,7 +3202,7 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     var Progress = _WeatherParameters.Progress;
 
     //CurrentWeather
-    _PlayMsOffsets.CurrentWeather_Start = 0
+    _PlayMsOffsets.CurrentWeather_Start = 0;
     if (Progress.CurrentConditions == LoadStatuses.Loaded)
     {
         _PlayMsOffsets.LatestObservations_Length = 10000;
@@ -4516,7 +4516,7 @@ var WeatherCurrentConditions = function (WeatherDwmlParser, WeatherMetarsParser)
 Math.round2 = function(value, decimals)
 {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+};
 
 var ConvertKnotsToMph = function (Knots)
 {
@@ -4624,7 +4624,7 @@ var ConvertXmlDateToJsDate = function (XmlDate)
     offsetMinutes = 0 + (sign == '-' ? -1 * offsetMinutes : offsetMinutes);
 
     // Apply offset and local timezone
-    d.setMinutes(d.getMinutes() - offsetMinutes - d.getTimezoneOffset())
+    d.setMinutes(d.getMinutes() - offsetMinutes - d.getTimezoneOffset());
 
     // d is now a local time equivalent to the supplied time
     return d;
@@ -4648,7 +4648,7 @@ var CalculateHeatIndex = function (Temperature, RelativeHumidity)
 
     if (T >= 80)
     {
-        HI = -42.379 + 2.04901523 * T + 10.14333127 * RH - .22475541 * T * RH - .00683783 * T * T - .05481717 * RH * RH + .00122874 * T * T * RH + .00085282 * T * RH * RH - .00000199 * T * T * RH * RH;
+        HI = -42.379 + 2.04901523 * T + 10.14333127 * RH - 0.22475541 * T * RH - 0.00683783 * T * T - 0.05481717 * RH * RH + 0.00122874 * T * T * RH + 0.00085282 * T * RH * RH - 0.00000199 * T * T * RH * RH;
 
         if (RH < 13 && (T > 80 && T < 112))
         {
@@ -5117,7 +5117,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 85;
+            x = 85;
             $(WeatherExtendedForecast.Day).each(function (Index)
             {
                 if (Index < LBound || Index > UBound) return true;
@@ -5127,7 +5127,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 165;
+            x = 165;
             $(WeatherExtendedForecast.Day).each(function (Index)
             {
                 if (Index < LBound || Index > UBound) return true;
@@ -5137,7 +5137,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 85;
+            x = 85;
             $(WeatherExtendedForecast.Day).each(function (Index)
             {
                 if (Index < LBound || Index > UBound) return true;
@@ -5161,7 +5161,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 165;
+            x = 165;
             $(WeatherExtendedForecast.Day).each(function (Index)
             {
                 if (Index < LBound || Index > UBound) return true;
@@ -5185,7 +5185,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 120;
+            x = 120;
             $(WeatherExtendedForecast.Day).each(function (Index)
             {
                 if (Index < LBound || Index > UBound) return true;
@@ -5199,7 +5199,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 x += 195;
             });
 
-            var x = 46;
+            x = 46;
             $(gifIcons).each(function ()
             {
                 // Max Width = 158px
@@ -5228,7 +5228,7 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
         BackGroundImage.src = "images/BackGround2_1.png";
     };
 
-    var x = 70;
+    x = 70;
 
     if (_DontLoadGifs == true)
     {
@@ -5263,9 +5263,8 @@ var PopulateExtendedForecast = function (WeatherParameters, ScreenIndex)
                 if (Counter == MaxIcons)
                 {
                     DrawExtendedForecast();
-                };
+                }
             });
-
         });
     }
 };
@@ -6062,7 +6061,7 @@ var PopulateHazardConditions = function (WeatherParameters)
     WeatherHazardConditions.HazardsTextC = ConvertConditionsToMetric(HazardsText);
     if (_Units == Units.Metric)
     {
-        HazardsText = WeatherHazardConditions.HazardsTextC
+        HazardsText = WeatherHazardConditions.HazardsTextC;
     }
 
     var HazardsWrapped = HazardsText.wordWrap(32);
@@ -6175,17 +6174,17 @@ String.prototype.wordWrap =  function (intWidth, strBreak, cut)
 
     var str = this;
 
-    var m = ((arguments.length >= 1) ? arguments[0] : 75)
-    var b = ((arguments.length >= 2) ? arguments[1] : '\n')
-    var c = ((arguments.length >= 3) ? arguments[2] : false)
+    var m = ((arguments.length >= 1) ? arguments[0] : 75);
+    var b = ((arguments.length >= 2) ? arguments[1] : '\n');
+    var c = ((arguments.length >= 3) ? arguments[2] : false);
 
-    var i, j, l, s, r
+    var i, j, l, s, r;
 
-    str += ''
+    str += '';
 
     if (m < 1)
     {
-        return str
+        return str;
     }
 
     for (i = -1, l = (r = str.split(/\r\n|\n|\r/)).length; ++i < l; r[i] += s)
@@ -6199,7 +6198,7 @@ String.prototype.wordWrap =  function (intWidth, strBreak, cut)
             j = c === 2 || (j = s.slice(0, m + 1).match(/\S*(\s)?$/))[1]
               ? m
               : j.input.length - j[0].length || c === true && m ||
-                j.input.length + (j = s.slice(m).match(/^\S*/))[0].length
+                j.input.length + (j = s.slice(m).match(/^\S*/))[0].length;
         }
     }
 
@@ -6363,7 +6362,7 @@ var MoonPhasesParser3 = function (json) {
 
 function getMonthFromString(mon)
 {
-    return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1
+    return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1;
 }
 
 var SunRiseSetParser = function (json)
@@ -6417,7 +6416,7 @@ var SunRiseSetParser2 = function (html)
 var SunRiseSetParser3 = function (json) {
     var _self = this;
 
-    var riseSet = json.astroData[0].sun.riseSet
+    var riseSet = json.astroData[0].sun.riseSet;
 
     if (riseSet.rise == "Sun rise doesn't exist" || riseSet.rise == undefined)
     {
@@ -6669,7 +6668,7 @@ var PopulateAlmanacInfo = function (WeatherParameters)
             };
             BackGroundImage.src = "images/BackGround3_1.png";
         }
-    }
+    };
 
     var FullMoonImage = new Image();
     FullMoonImage.onload = MoonImageLoaded;
@@ -6793,7 +6792,7 @@ var ConvertDateToTimeZone = function(date, timezone)
     dt = dt.addHours(NewOffset);
     
     return dt;
-}
+};
 
 var GetDateFromTime = function (date, time, timezone)
 {
@@ -6839,7 +6838,7 @@ Date.prototype.getFormattedTime = function ()
     }
 
     return formattedTime;
-}
+};
 
 Date.prototype.toTimeAMPM = function ()
 {
@@ -6852,7 +6851,7 @@ Date.prototype.toTimeAMPM = function ()
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
-}
+};
 
 var GetTravelWeather = function (WeatherParameters)
 {
@@ -7187,7 +7186,7 @@ var PopulateTravelCities = function (WeatherParameters)
                         if (Counter == MaxIcons)
                         {
                             DrawTravelCities();
-                        };
+                        }
                     });
                 }
             }
@@ -7200,7 +7199,7 @@ var PopulateTravelCities = function (WeatherParameters)
                 if (Counter == MaxIcons)
                 {
                     DrawTravelCities();
-                };
+                }
             }
 
             y += 72;
@@ -7497,7 +7496,7 @@ var PopulateRegionalObservations = function (WeatherParameters)
     $(WeatherCurrentRegionalConditions.StationIds).each(function ()
     {
         var WeatherCurrentCondition = WeatherCurrentRegionalConditions.WeatherCurrentConditions[this.toString()];
-        SortedArray.push(WeatherCurrentCondition)
+        SortedArray.push(WeatherCurrentCondition);
     });
     SortedArray.sort(function (a, b)
     {
@@ -7770,7 +7769,7 @@ var ShowRegionalMap = function (WeatherParameters, TomorrowForecast1, TomorrowFo
                         var RegionalForecastCity = this;
 
                         var RegionalCity = RegionalForecastCity.RegionalCity;
-                        var CityXY = RegionalForecastCity.CityXY;
+                        CityXY = RegionalForecastCity.CityXY;
                         var weatherTravelForecast = RegionalForecastCity.weatherTravelForecast;
 
                         var x = CityXY.X;
@@ -7878,7 +7877,7 @@ var ShowRegionalMap = function (WeatherParameters, TomorrowForecast1, TomorrowFo
                     var RegionalObservationsCity = this;
 
                     var RegionalCity = RegionalObservationsCity.RegionalCity;
-                    var CityXY = RegionalObservationsCity.CityXY;
+                    CityXY = RegionalObservationsCity.CityXY;
                     var weatherCurrentConditions = RegionalObservationsCity.weatherCurrentConditions;
 
                     var x = CityXY.X;
@@ -8195,17 +8194,18 @@ var ShowRegionalMap = function (WeatherParameters, TomorrowForecast1, TomorrowFo
                             return;
                         }
 
+                        var CityXY;
                         if (WeatherParameters.State == "HI")
                         {
-                            var CityXY = GetXYForCityHI(RegionalCity, maxLat, minLon);
+                            CityXY = GetXYForCityHI(RegionalCity, maxLat, minLon);
                         }
                         else if (WeatherParameters.State == "AK")
                         {
-                            var CityXY = GetXYForCityAK(RegionalCity, maxLat, minLon);
+                            CityXY = GetXYForCityAK(RegionalCity, maxLat, minLon);
                         }
                         else
                         {
-                            var CityXY = GetXYForCity(RegionalCity, maxLat, minLon);
+                            CityXY = GetXYForCity(RegionalCity, maxLat, minLon);
                         }
 
                         RegionalForecastCities.push({ RegionalCity: RegionalCity, CityXY: CityXY, weatherTravelForecast: weatherTravelForecast });
@@ -8257,15 +8257,15 @@ var ShowRegionalMap = function (WeatherParameters, TomorrowForecast1, TomorrowFo
 
                             if (WeatherParameters.State == "HI")
                             {
-                                var CityXY = GetXYForCityHI(RegionalCity, maxLat, minLon);
+                                CityXY = GetXYForCityHI(RegionalCity, maxLat, minLon);
                             }
                             else if (WeatherParameters.State == "AK")
                             {
-                                var CityXY = GetXYForCityAK(RegionalCity, maxLat, minLon);
+                                CityXY = GetXYForCityAK(RegionalCity, maxLat, minLon);
                             }
                             else
                             {
-                                var CityXY = GetXYForCity(RegionalCity, maxLat, minLon);
+                                CityXY = GetXYForCity(RegionalCity, maxLat, minLon);
                             }
                             if (!WeatherParameters.RegionalObservationsCities)
                             {
@@ -8340,7 +8340,7 @@ var ShowRegionalMap = function (WeatherParameters, TomorrowForecast1, TomorrowFo
     {
         img.src = "images/basemap2.png";
     }
-}
+};
 
 var DrawText = function (context, font, size, color, x, y, text, shadow, align)
 {
@@ -8394,7 +8394,7 @@ var GetXYFromLatitudeLongitude = function (Latitude, Longitude, OffsetX, OffsetY
     }
 
     SourceX = ((-127.5 - Longitude) * 41.775) * -1;
-    SourceX -= OffsetX // Centers map.
+    SourceX -= OffsetX; // Centers map.
     // Do not allow the map to exceed the max/min coordinates.
     if (SourceX > (ImgWidth - (OffsetX * 2))) // The OffsetX * 2
     {
@@ -8406,7 +8406,7 @@ var GetXYFromLatitudeLongitude = function (Latitude, Longitude, OffsetX, OffsetY
     }
 
     return { X: SourceX, Y: SourceY };
-}
+};
 
 var GetMinMaxLatitudeLongitude = function (X, Y, OffsetX, OffsetY)
 {
@@ -8464,7 +8464,7 @@ var GetXYFromLatitudeLongitudeAK = function (Latitude, Longitude, OffsetX, Offse
     }
 
     SourceX = ((-175.0 - Longitude) * 25.0) * -1;
-    SourceX -= OffsetX // Centers map.
+    SourceX -= OffsetX; // Centers map.
     // Do not allow the map to exceed the max/min coordinates.
     if (SourceX > (ImgWidth - (OffsetX * 2))) // The OffsetX * 2
     {
@@ -8476,7 +8476,7 @@ var GetXYFromLatitudeLongitudeAK = function (Latitude, Longitude, OffsetX, Offse
     }
 
     return { X: SourceX, Y: SourceY };
-}
+};
 
 var GetMinMaxLatitudeLongitudeAK = function (X, Y, OffsetX, OffsetY)
 {
@@ -8534,7 +8534,7 @@ var GetXYFromLatitudeLongitudeHI = function (Latitude, Longitude, OffsetX, Offse
     }
 
     SourceX = ((-164.5 - Longitude) * 41.775) * -1;
-    SourceX -= OffsetX // Centers map.
+    SourceX -= OffsetX; // Centers map.
     // Do not allow the map to exceed the max/min coordinates.
     if (SourceX > (ImgWidth - (OffsetX * 2))) // The OffsetX * 2
     {
@@ -8546,7 +8546,7 @@ var GetXYFromLatitudeLongitudeHI = function (Latitude, Longitude, OffsetX, Offse
     }
 
     return { X: SourceX, Y: SourceY };
-}
+};
 
 var GetMinMaxLatitudeLongitudeHI = function (X, Y, OffsetX, OffsetY)
 {
