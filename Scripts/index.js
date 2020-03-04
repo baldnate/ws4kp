@@ -697,7 +697,6 @@ $.fn.fadeIn2 = function ()
 
         if (opacity == 1.0)
         {
-            //_self.css("visibility", "");
             _self.css("visibility", "visible");
             window.clearInterval(IntervalId);
         }
@@ -717,7 +716,6 @@ $.fn.fadeOut2 = function ()
         return;
     }
 
-    //_self.css("visibility", "");
     _self.css("visibility", "visible");
     _self.css("opacity", "1.0");
 
@@ -859,7 +857,6 @@ $(function ()
 		    'Welcome, Maryland, United States': { x: -77.081212, y: 38.4692469 },
 		    'Tampa, Florida, United States (City)': { x: -82.5329, y: 27.9756 },
 		    'San Francisco, California, United States': { x: -122.3758, y: 37.6188 },
-		    //'Dayton, Ohio, United States (City)': { x: -84.05, y: 39.85 },
 		},
 		roundToPlaces = function (num, decimals)
 		{
@@ -987,7 +984,6 @@ $(function ()
         showNoSuggestionNotice: true,
         noSuggestionNotice: 'No results found. Please try a different search string.',
         onSelect: OnSelect,
-        //width: 400
         width: 490,
     });
 
@@ -998,7 +994,6 @@ $(function ()
         {
             $(ac.suggestionsContainer.children[0]).click();
             return false;
-            //PreviousSeggestion = ac.suggestions[0];
         }
         if (PreviousSeggestion)
         {
