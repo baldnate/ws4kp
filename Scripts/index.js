@@ -44,7 +44,6 @@ var chkScrollText;
 var txtScrollText;
 var btnScrollText;
 
-//var _InFullScreen = false;
 var _AutoSelectQuery = false;
 var _TwcDataUrl = "";
 var _IsPlaying = false;
@@ -54,8 +53,6 @@ var _NoSleep = new NoSleep();
 var _LastUpdate = null;
 var _AutoRefreshIntervalId = null;
 var _AutoRefreshIntervalMs = 500;
-//var _AutoRefreshTotalIntervalMs = 10000; // 10 sec.
-//var _AutoRefreshTotalIntervalMs = 300000; // 5 min.
 var _AutoRefreshTotalIntervalMs = 600000; // 10 min.
 var _AutoRefreshCountMs = 0;
 
@@ -114,10 +111,6 @@ var FullScreenResize = function ()
 
     if (inFullScreen == true)
     {
-        //if (WindowWidth > WindowHeight)
-        //if (WindowWidth > 850)
-        //if (WindowWidth > 0)
-        //if (WindowWidth > 640)
         if ((WindowWidth / WindowHeight) >= 1.583333333333333) // = 640 (TWC Width) + 48 (Icon min width on left side) + 12 (left padding) + 48 (Right icons) + 12 (right padding) / 480 (TWC Height)
         {
             NewHeight = WindowHeight + "px";
@@ -129,10 +122,6 @@ var FullScreenResize = function ()
 
             divTwcMiddle.attr("style", "width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
 
-            //IFrameWidth = (WindowHeight * 1.33333333333333333333);
-            //iframeTwc.attr("style", "width:" + IFrameWidth + "px; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-
-            //LeftWidth = ((((WindowHeight * 16) / 9) - (WindowHeight * 1.25)) / 2) + "px";
             LeftWidth = ((WindowWidth - (WindowHeight * 1.33333333333333333333)) / 2);
             if (LeftWidth < 60)
             {
@@ -141,7 +130,6 @@ var FullScreenResize = function ()
             divTwcLeft.attr("style", "width:" + LeftWidth + "px; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
             divTwcLeft.css("visibility", "visible");
 
-            //RightWidth = ((((WindowHeight * 16) / 9) - (WindowHeight * 1.25)) / 2) + "px";
             RightWidth = ((WindowWidth - (WindowHeight * 1.33333333333333333333)) / 2);
             if (RightWidth < 60)
             {
@@ -153,8 +141,6 @@ var FullScreenResize = function ()
             IFrameWidth = WindowWidth - LeftWidth - RightWidth;
             NewWidth = IFrameWidth + "px";
             iframeTwc.attr("style", "width:" + IFrameWidth + "px; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-
-            //console.log(WindowWidth);
         }
         else
         {
@@ -164,12 +150,7 @@ var FullScreenResize = function ()
             divTwcBottom.show();
             divTwcLeft.hide();
             divTwcRight.hide();
-            //Offset = 400;
             Offset = 0;
-
-            //IFrameHeight = ((WindowWidth - Offset) * 0.75) + "px";
-            //iframeTwc.attr("style", "width:100%; height:" + IFrameHeight + "; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-            //divTwcMiddle.attr("style", "width:100%; height:" + IFrameHeight + "; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
 
             TopHeight = ((WindowHeight - ((WindowWidth - Offset) * 0.75)) / 2);
             if (TopHeight < 0)
@@ -209,8 +190,6 @@ var FullScreenResize = function ()
         $(window).off("resize", FullScreenResize);
     }
 
-    //iframeDoc.find("#canvasProgress").css("width", NewWidth);
-    //iframeDoc.find("#canvasProgress").css("height", NewHeight);
     $(_canvasIds).each(function ()
     {
         var canvas = iframeDoc.find("#" + this.toString());
@@ -234,13 +213,6 @@ var FullScreenResize = function ()
         $(".ToggleFullScreen").val("Full Screen");
     }
 
-    //divTwc.show();
-    ////divTwc.css("display", "block");
-    //if (divTwc.css("display") != "block")
-    //{
-    //    divTwc.css("display", "block");
-    //}
-
     divTwcNavContainer.show();
 };
 
@@ -255,9 +227,8 @@ var OnFullScreen = function ()
         FullScreenResize();
 
         $(window).on("resize", FullScreenResize);
-        //FullScreenResize();
 
-        if (_lockOrientation) try { _lockOrientation("landscape-primary"); } catch (ex) { console.log("Unable to lock screen orientation."); };
+        if (_lockOrientation) try { _lockOrientation("landscape-primary"); } catch (ex) { console.log("Unable to lock screen orientation."); }
     }
     else
     {
@@ -268,17 +239,12 @@ var OnFullScreen = function ()
         $(window).off("resize", FullScreenResize);
         FullScreenResize();
 
-        if (_unlockOrientation) try { _unlockOrientation(); } catch (ex) { console.log("Unable to unlock screen orientation."); };
+        if (_unlockOrientation) try { _unlockOrientation(); } catch (ex) { console.log("Unable to unlock screen orientation."); }
     }
 };
 
 var InFullScreen = function()
 {
-    //return true;
-    //return (document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled);
-    //return (window.innerHeight == screen.height);
-    //return (((document.fullScreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) != null) || (window.innerHeight >= screen.height));
-    //return ((GetFullScreenElement() != null) || (window.innerHeight == screen.height));
     return ((_FullScreenOverride == true) || (GetFullScreenElement() != null) || (window.innerHeight == screen.height) || (window.innerHeight == (screen.height - 1)));
 };
 
@@ -290,39 +256,17 @@ var GetFullScreenElement = function()
     }
 
     return (document.fullScreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
-}
+};
 
 var btnFullScreen_click = function ()
 {
-    //_InFullScreen = !(_InFullScreen);
-
     if (InFullScreen() == false)
     {
         EnterFullScreen();
-
-        ////position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;
-        //divTwc.attr("style", "position:fixed; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-        ////iframeTwc.attr("style", "width:100%; height:90%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-
-        ////divTwcMiddle.attr("style", "width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-        ////divTwcLeft.attr("style", "width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-        ////iframeTwc.attr("style", "width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-
-        //FullScreenResize();
-
-        //$(window).on("resize", FullScreenResize);
-        //FullScreenResize();
     }
     else
     {
         ExitFullscreen();
-
-        //divTwc.attr("style", "");
-        //divTwcMiddle.attr("style", "");
-        //iframeTwc.attr("style", "");
-
-        //$(window).off("resize", FullScreenResize);
-        //FullScreenResize();
     }
 
     if (_IsPlaying == true)
@@ -342,15 +286,11 @@ var btnFullScreen_click = function ()
 var EnterFullScreen = function ()
 {
     var element = document.body;
-
-    // Supports most browsers and their versions.
     var requestMethod;
     requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullscreen;
 
     if (requestMethod)
     {
-        // Native full screen.
-        //requestMethod.call(element);
         requestMethod.call(element, { navigationUI: "hide" }); // https://bugs.chromium.org/p/chromium/issues/detail?id=933436#c7
     } 
     else if (typeof window.ActiveXObject !== "undefined")
@@ -375,8 +315,6 @@ var EnterFullScreen = function ()
 
 var ExitFullscreen = function ()
 {
-    // exit full-screen
-
     if (_FullScreenOverride == true)
     {
         _FullScreenOverride = false;
@@ -404,12 +342,8 @@ var ExitFullscreen = function ()
 
 var btnNavigateMenu_click = function ()
 {
-    //var iFrameLocation = iframeTwc[0].contentWindow.location;
-    //iFrameLocation.hash = "";
-    //iFrameLocation.hash = "aProgress";
     iframeTwc[0].contentWindow.NavigateMenu();
     UpdateFullScreenNavigate();
-
     return false;
 };
 
@@ -436,7 +370,7 @@ var LoadTwcData = function (Url)
                     return;
                 }
 
-                iframeTwc.attr("src", "twc3.html?_=" + (new Date).getTime().toString());
+                iframeTwc.attr("src", "twc3.html?_=" + (new Date()).getTime().toString());
                 break;
 
             default:
@@ -449,13 +383,10 @@ var LoadTwcData = function (Url)
                 }
 
                 iframeTwc[0].contentWindow.AssignThemes({ Themes: $("input[type='radio'][name='radThemes']:checked").val() });
-
                 iframeTwc[0].contentWindow.AssignUnits({ Units: $("input[type='radio'][name='radUnits']:checked").val() });
-
                 iframeTwc[0].contentWindow.SetCallBack({ CallBack: TwcCallBack });
-
                 iframeTwc[0].contentWindow.GetLatLng(Url);
-                
+
                 if (_IsPlaying == true)
                 {
                     iframeTwc[0].contentWindow.NavigatePlayToggle();
@@ -495,12 +426,7 @@ var LoadTwcData = function (Url)
                     //Generic swipe handler for all directions
                     swipeRight: SwipeCallBack,
                     swipeLeft: SwipeCallBack,
-
-                    ////Default is 75px, set to 0 for demo so any distance triggers swipe
-                    //threshold: 0
                 });
-
-
                 break;
         }
     });
@@ -648,11 +574,7 @@ var btnNavigatePrevious_click = function ()
 
 var window_resize = function ()
 {
-    //var iFrameLocation = iframeTwc[0].contentWindow.location;
-    //var Hash = iFrameLocation.hash;
-
     var $window = $(window);
-
     if ($window.height() == _WindowHeight || $window.width() == _WindowWidth)
     {
         return;
@@ -663,10 +585,6 @@ var window_resize = function ()
 
     try
     {
-        ////iFrameLocation.hash = "";
-        ////iFrameLocation.hash = Hash;
-        //iframeTwc[0].contentWindow.history.replaceState("", document.title, iFrameLocation.pathname);
-        //iframeTwc[0].contentWindow.history.replaceState("", document.title, iFrameLocation.pathname + Hash);
         iframeTwc[0].contentWindow.NavigateReset();
     } catch (ex) { }
 
@@ -678,25 +596,11 @@ var _NavigateFadeIntervalId = null;
 var UpdateFullScreenNavigate = function ()
 {
     $(document.activeElement).blur();
-
-    //console.log("window_mousemove: inFullScreen = True");
-    //console.log(e);
-
-    //if (divTwcLeft.css("visibility") != "")
-    //{
-    //    divTwcLeft.css("visibility", "");
-    //    divTwcLeft.css("opacity", "0.0");
-    //    divTwcLeft.animate({ opacity: 1.0 }, 1000);
-    //    //divTwcLeft.fadeIn();
-    //}
-    //$("body").css("cursor", "");
     $("body").removeClass("HideCursor");
     $(iframeTwc[0].contentWindow.document).find("body").removeClass("HideCursor");
     divTwcLeft.fadeIn2();
     divTwcRight.fadeIn2();
     divTwcBottom.fadeIn2();
-
-    //divTwcRight.fadeIn();
 
     if (_NavigateFadeIntervalId)
     {
@@ -706,37 +610,21 @@ var UpdateFullScreenNavigate = function ()
 
     _NavigateFadeIntervalId = window.setTimeout(function ()
     {
-        //console.log("window_mousemove: TimeOut");
         var inFullScreen = InFullScreen();
-        //alert(inFullScreen)
-
         if (inFullScreen == true)
         {
-            //$("body").css("cursor", "none !important");
             $("body").addClass("HideCursor");
-            //$(iframeTwc[0].contentWindow).css("cursor", "none !important");
             $(iframeTwc[0].contentWindow.document).find("body").addClass("HideCursor");
-
-            //divTwcLeft.css("visibility", "");
-            //divTwcLeft.animate({ opacity: 0.0 }, 1000, function ()
-            //{
-            //    divTwcLeft.css("visibility", "hidden");
-            //});
             divTwcLeft.fadeOut2();
             divTwcRight.fadeOut2();
             divTwcBottom.fadeOut2();
         }
-
-        //divTwcRight.fadeOut();
     }, 2000);
 };
 
 var document_mousemove = function (e)
 {
     var inFullScreen = InFullScreen();
-    //alert("document_mousemove")
-
-    //console.log(e.originalEvent.buttons);
     if (inFullScreen == true)
     {
         if ((e.originalEvent.movementX == 0 && e.originalEvent.movementY == 0 && e.originalEvent.buttons == 0))
@@ -750,17 +638,6 @@ var document_mousemove = function (e)
 
 var document_keydown = function (e)
 {
-    //if (_AllowKeyDown == false)
-    //{
-    //    return;
-    //}
-    //_AllowKeyDown = false;
-
-    //window.setTimeout(function ()
-    //{
-    //    _AllowKeyDown = true;
-    //}, 500);
-
     var inFullScreen = InFullScreen();
     var code = (e.keyCode || e.which);
 
@@ -771,45 +648,29 @@ var document_keydown = function (e)
             case 32: // Space
                 btnNavigatePlay_click();
                 return false;
-                break;
-
             case 39: // Right Arrow
             case 34: // Page Down
                 btnNavigateNext_click();
                 return false;
-                break;
-
             case 37: // Left Arrow
             case 33: // Page Up
                 btnNavigatePrevious_click();
                 return false;
-                break;
-
             case 36: // Home
                 btnNavigateMenu_click();
                 return false;
-                break;
-
             case 48: // Restart
                 btnNavigateRefresh_click();
                 return false;
-                break;
-
             case 77: // M
                 btnAudioPlay_click();
                 return false;
-                break;
-
             case 78: // N
                 btnNarrationPlay_click();
                 return false;
-                break;
-
             case 70: // F
                 btnFullScreen_click();
                 return false;
-                break;
-                
         }
     }
 };
@@ -825,7 +686,6 @@ $.fn.fadeIn2 = function ()
         return;
     }
 
-    //_self.css("visibility", "");
     _self.css("visibility", "visible");
     _self.css("opacity", "0.0");
 
@@ -880,32 +740,12 @@ $.fn.fadeOut2 = function ()
 Math.round2 = function (value, decimals)
 {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+};
 
 var btnNavigatePlay_click = function ()
 {
     iframeTwc[0].contentWindow.NavigatePlayToggle();
     UpdateFullScreenNavigate();
-
-    //if (iframeTwc[0].contentWindow.IsPlaying() == true)
-    //{
-    //    _NoSleep.enable();
-
-    //    $("img[src='images/nav/ic_play_arrow_white_24dp_1x.png']").attr("title", "Pause");
-    //    $("img[src='images/nav/ic_play_arrow_white_24dp_1x.png']").attr("src", "images/nav/ic_pause_white_24dp_1x.png");
-    //    $("img[src='images/nav/ic_play_arrow_white_24dp_2x.png']").attr("title", "Pause");
-    //    $("img[src='images/nav/ic_play_arrow_white_24dp_2x.png']").attr("src", "images/nav/ic_pause_white_24dp_2x.png");
-    //}
-    //else
-    //{
-    //    _NoSleep.disable();
-
-    //    $("img[src='images/nav/ic_pause_white_24dp_1x.png']").attr("title", "Play");
-    //    $("img[src='images/nav/ic_pause_white_24dp_1x.png']").attr("src", "images/nav/ic_play_arrow_white_24dp_1x.png");
-    //    $("img[src='images/nav/ic_pause_white_24dp_2x.png']").attr("title", "Play");
-    //    $("img[src='images/nav/ic_pause_white_24dp_2x.png']").attr("src", "images/nav/ic_play_arrow_white_24dp_2x.png");
-    //}
-
     return false;
 };
 
@@ -988,12 +828,9 @@ $(function ()
     $(document).on("mousedown", document_mousemove);
     divTwc.on("mousedown", document_mousemove);
     $(document).on("keydown", document_keydown);
-    document.addEventListener("touchmove", function (e) { if (_FullScreenOverride == true) e.preventDefault() });
-    //$(document).on("keypress", document_keydown);
+    document.addEventListener("touchmove", function (e) { if (_FullScreenOverride == true) e.preventDefault();});
     $(".ToggleFullScreen").on("click", btnFullScreen_click);
     FullScreenResize();
-
-    //var AutoSelectQuery = false;
 
     var categories = [
 			'Land Features',
@@ -1045,7 +882,6 @@ $(function ()
 		        {
 		            origin = location.protocol + "//" + location.hostname + (location.port ? ':' + location.port : '');
 		        }
-		        //window.location = origin + location.pathname + query;
 		        Url = origin + location.pathname + query;
 		    }
 		    else
@@ -1060,8 +896,6 @@ $(function ()
 		        {
 		            domain = 'forecast.weather.gov';
 		        }
-		        //window.location = location.protocol + '//' + domain + '/MapClick.php' + query;
-		        //Url = location.protocol + '//' + domain + '/MapClick.php' + query;
 		        Url =  'http://' + domain + '/MapClick.php' + query;
 		    }
 		    Url = "cors/?u=" + encodeURIComponent(Url);
@@ -1077,7 +911,7 @@ $(function ()
     {
         console.log(suggestion);
         suggestion = {
-            "value": "78759, Austin, TX, USA",
+            "value": "Austin, TX, USA",
             "data": "dHA9MCNsb2M9NjY2OTMyNCNsbmc9MzMjcGw9MjQwMDM0NyNsYnM9MTQ6Mjk2MDQxOQ=="
           };
         var request;
@@ -1339,8 +1173,6 @@ $(function ()
 
 var StartAutoRefreshTimer = function ()
 {
-    //// Esnure that any previous timer has already stopped.
-    //StopAutoRefreshTimer();
     if (_AutoRefreshIntervalId)
     {
         // Timer is already running.
