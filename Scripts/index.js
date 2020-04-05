@@ -908,8 +908,7 @@ $(function ()
     {
         console.log(suggestion);
         suggestion = {
-            "value": "Austin, TX, USA",
-            "data": "dHA9MCNsb2M9NjY2OTMyNCNsbmc9MzMjcGw9MjQwMDM0NyNsYnM9MTQ6Mjk2MDQxOQ=="
+            "value": "Austin, TX, USA"
           };
         var request;
 
@@ -926,7 +925,6 @@ $(function ()
                 url: location.protocol + '//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find',
                 data: {
                     text: suggestion.value,
-                    magicKey: suggestion.data,
                     f: 'json'
                 },
                 jsonp: 'callback',
