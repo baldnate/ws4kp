@@ -1231,18 +1231,12 @@ $(function ()
         _IsPlaying = true;
     }
 
-    var TwcAudioPlay = localStorage.getItem("TwcAudioPlay");
-    if (!TwcAudioPlay || TwcAudioPlay == "true")
-    {
-        _IsAudioPlaying = true;
-    }
+    var TwcAudioPlay = false;
+    _IsAudioPlaying = false;
 
-    var TwcNarrationPlay = localStorage.getItem("TwcNarrationPlay");
-    if (TwcNarrationPlay == "true")
-    {
-        _IsNarrationPlaying = true;
-    }
-
+    var TwcNarrationPlay = false;
+    _IsNarrationPlaying = false;
+    
     var TwcScrollText = localStorage.getItem("TwcScrollText");
     if (TwcScrollText)
     {
