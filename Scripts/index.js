@@ -1100,8 +1100,20 @@ $(function ()
 
     var PreviousSeggestionValue = null;
     var PreviousSeggestion = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let urlSuggestedLocation;
+    if (urlParams.has('location')) {
+        urlSuggestedLocation = urlParams.get('location');
+    } else {
+        urlSuggestedLocation = "Austin, TX, USA"
+    }
+
     var OnSelect = function (suggestion)
     {
+        suggestion = {
+            "value": urlSuggestedLocation
+        };
         var request;
 
         // Do not auto get the same city twice.
@@ -1200,6 +1212,8 @@ $(function ()
 
         return false;
     });
+
+    OnSelect("");
 
     // Auto load the previous query
     var TwcQuery = localStorage.getItem("TwcQuery");
