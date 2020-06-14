@@ -177,25 +177,33 @@ var _UpdateHazardsY = 0;
 var _UpdateLocalForecastIndex = 0;
 var _UpdateLocalForecastCounterMs = 0;
 
-var CanvasTypes = {
-    Progress: 0,
-    CurrentWeather: 1,
-    LatestObservations: 2,
-    TravelForecast: 3,
-    RegionalForecast1: 4,
-    RegionalForecast2: 5,
-    RegionalObservations: 6,
-    LocalForecast: 7,
-    MarineForecast: 8,
-    ExtendedForecast1: 9,
-    ExtendedForecast2: 10,
-    Almanac: 11,
-    AlmanacTides: 12,
-    AirQuality: 13,
-    Outlook: 14,
-    LocalRadar: 15,
-    Hazards: 16,
-};
+const CANVASES = [
+    'Progress',
+    'CurrentWeather',
+    'ExtendedForecast1',
+    'ExtendedForecast2',
+    'LocalRadar',
+    'RegionalObservations',
+    'RegionalForecast1',
+    'RegionalForecast2',
+    'AirQuality',
+    'Almanac',
+    'MarineForecast',
+    'AlmanacTides',
+    'LocalForecast',
+    'Hazards',
+    'LatestObservations',
+    'Outlook',
+    'TravelForecast',
+];
+
+let CanvasTypes = {};
+
+for (let i = 0; i < CANVASES.length; i++) {
+    const element = CANVASES[i];
+    CanvasTypes[element] = i;
+}
+
 var _FirstCanvasType = CanvasTypes.Progress;
 var _LastCanvasType = CanvasTypes.Hazards;
 var _CurrentCanvasType = _FirstCanvasType;
@@ -4001,7 +4009,7 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     var Hazards = _WeatherParameters.WeatherHazardConditions.Hazards;
     var Progress = _WeatherParameters.Progress;
 
-    //CurrentWeather
+    //CurrentWeather (graphical)
     _PlayMsOffsets.CurrentWeather_Start = 0
     if (Progress.CurrentConditions == LoadStatuses.Loaded)
     {
@@ -4013,104 +4021,8 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     }
     _PlayMsOffsets.CurrentWeather_End = _PlayMsOffsets.CurrentWeather_Start + _PlayMsOffsets.LatestObservations_Length;
 
-    //LatestObservations
-    _PlayMsOffsets.LatestObservations_Start = _PlayMsOffsets.CurrentWeather_End;
-    if (Progress.NearbyConditions == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.LatestObservations_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.LatestObservations_Length = 0;
-    }
-    _PlayMsOffsets.LatestObservations_End = _PlayMsOffsets.LatestObservations_Start + _PlayMsOffsets.LatestObservations_Length;
-
-    //TravelForecast
-    _PlayMsOffsets.TravelForecast_Start = _PlayMsOffsets.LatestObservations_End;
-    if (Progress.TravelForecast == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.TravelForecast_Length = 60000;
-    }
-    else
-    {
-        _PlayMsOffsets.TravelForecast_Length = 0;
-    }
-    _PlayMsOffsets.TravelForecast_End = _PlayMsOffsets.TravelForecast_Start + _PlayMsOffsets.TravelForecast_Length;
-
-    //RegionalForecast1
-    _PlayMsOffsets.RegionalForecast1_Start = _PlayMsOffsets.TravelForecast_End;
-    if (Progress.TomorrowsRegionalMap == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.RegionalForecast1_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.RegionalForecast1_Length = 0;
-    }
-    _PlayMsOffsets.RegionalForecast1_End = _PlayMsOffsets.RegionalForecast1_Start + _PlayMsOffsets.RegionalForecast1_Length;
-
-    //RegionalForecast2
-    _PlayMsOffsets.RegionalForecast2_Start = _PlayMsOffsets.RegionalForecast1_End;
-    if (Progress.TomorrowsRegionalMap == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.RegionalForecast2_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.RegionalForecast2_Length = 0;
-    }
-    _PlayMsOffsets.RegionalForecast2_End = _PlayMsOffsets.RegionalForecast2_Start + _PlayMsOffsets.RegionalForecast2_Length;
-
-    //RegionalObservations
-    _PlayMsOffsets.RegionalObservations_Start = _PlayMsOffsets.RegionalForecast2_End;
-    if (Progress.CurrentRegionalMap == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.RegionalObservations_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.RegionalObservations_Length = 0;
-    }
-    _PlayMsOffsets.RegionalObservations_End = _PlayMsOffsets.RegionalObservations_Start + _PlayMsOffsets.RegionalObservations_Length;
-
-    //LocalForecast
-    _PlayMsOffsets.LocalForecast_Start = _PlayMsOffsets.RegionalObservations_End;
-    if (Progress.WordedForecast == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.LocalForecast_Length = LocalForecastScreenTexts.length * 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.LocalForecast_Length = 0;
-    }
-    _PlayMsOffsets.LocalForecast_End = _PlayMsOffsets.LocalForecast_Start + _PlayMsOffsets.LocalForecast_Length;
-
-    //Marine Forecast
-    _PlayMsOffsets.MarineForecast_Start = _PlayMsOffsets.LocalForecast_End;
-    if (Progress.WordedForecast == LoadStatuses.Loaded && _WeatherParameters.MarineForecast)
-    {
-        _PlayMsOffsets.MarineForecast_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.MarineForecast_Length = 0;
-    }
-    _PlayMsOffsets.MarineForecast_End = _PlayMsOffsets.MarineForecast_Start + _PlayMsOffsets.MarineForecast_Length;
-
-    //Air Quality
-    _PlayMsOffsets.AirQuality_Start = _PlayMsOffsets.MarineForecast_End;
-    if (Progress.WordedForecast == LoadStatuses.Loaded && _WeatherParameters.AirQuality)
-    {
-        _PlayMsOffsets.AirQuality_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.AirQuality_Length = 0;
-    }
-    _PlayMsOffsets.AirQuality_End = _PlayMsOffsets.AirQuality_Start + _PlayMsOffsets.AirQuality_Length;
-
-    //ExtendedForecast1
-    _PlayMsOffsets.ExtendedForecast1_Start = _PlayMsOffsets.AirQuality_End;
+    //ExtendedForecast1 (graphical)
+    _PlayMsOffsets.ExtendedForecast1_Start = _PlayMsOffsets.CurrentWeather_End;
     if (Progress.FourDayForecast == LoadStatuses.Loaded)
     {
         _PlayMsOffsets.ExtendedForecast1_Length = 10000;
@@ -4121,7 +4033,7 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     }
     _PlayMsOffsets.ExtendedForecast1_End = _PlayMsOffsets.ExtendedForecast1_Start + _PlayMsOffsets.ExtendedForecast1_Length;
 
-    //ExtendedForecast2
+    //ExtendedForecast2 (graphical)
     _PlayMsOffsets.ExtendedForecast2_Start = _PlayMsOffsets.ExtendedForecast1_End;
     if (Progress.FourDayForecast == LoadStatuses.Loaded)
     {
@@ -4133,44 +4045,8 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     }
     _PlayMsOffsets.ExtendedForecast2_End = _PlayMsOffsets.ExtendedForecast2_Start + _PlayMsOffsets.ExtendedForecast2_Length;
 
-    //Almanac
-    _PlayMsOffsets.Almanac_Start = _PlayMsOffsets.ExtendedForecast2_End;
-    if (Progress.Almanac == LoadStatuses.Loaded)
-    {
-        _PlayMsOffsets.Almanac_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.Almanac_Length = 0;
-    }
-    _PlayMsOffsets.Almanac_End = _PlayMsOffsets.Almanac_Start + _PlayMsOffsets.Almanac_Length;
-
-    //Almanac (Tides)
-    _PlayMsOffsets.AlmanacTides_Start = _PlayMsOffsets.Almanac_End;
-    if (Progress.Almanac == LoadStatuses.Loaded && _WeatherParameters.WeatherTides)
-    {
-        _PlayMsOffsets.AlmanacTides_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.AlmanacTides_Length = 0;
-    }
-    _PlayMsOffsets.AlmanacTides_End = _PlayMsOffsets.AlmanacTides_Start + _PlayMsOffsets.AlmanacTides_Length;
-
-    //Outlook
-    _PlayMsOffsets.Outlook_Start = _PlayMsOffsets.AlmanacTides_End;
-    if (Progress.Almanac == LoadStatuses.Loaded && _WeatherParameters.Outlook)
-    {
-        _PlayMsOffsets.Outlook_Length = 10000;
-    }
-    else
-    {
-        _PlayMsOffsets.Outlook_Length = 0;
-    }
-    _PlayMsOffsets.Outlook_End = _PlayMsOffsets.Outlook_Start + _PlayMsOffsets.Outlook_Length;
-
-    //LocalRadar
-    _PlayMsOffsets.LocalRadar_Start = _PlayMsOffsets.Outlook_End;
+    //LocalRadar (semi regional)
+    _PlayMsOffsets.LocalRadar_Start = _PlayMsOffsets.ExtendedForecast2_End;
     if (Progress.DopplerRadar == LoadStatuses.Loaded)
     {
         _PlayMsOffsets.LocalRadar_Length = 15000;
@@ -4181,8 +4057,104 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     }
     _PlayMsOffsets.LocalRadar_End = _PlayMsOffsets.LocalRadar_Start + _PlayMsOffsets.LocalRadar_Length;
 
-    //Hazards
-    _PlayMsOffsets.Hazards_Start = _PlayMsOffsets.LocalRadar_End;
+    //RegionalObservations (map)
+    _PlayMsOffsets.RegionalObservations_Start = _PlayMsOffsets.LocalRadar_End;
+    if (Progress.CurrentRegionalMap == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.RegionalObservations_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.RegionalObservations_Length = 0;
+    }
+    _PlayMsOffsets.RegionalObservations_End = _PlayMsOffsets.RegionalObservations_Start + _PlayMsOffsets.RegionalObservations_Length;
+
+    //RegionalForecast1 (map)
+    _PlayMsOffsets.RegionalForecast1_Start = _PlayMsOffsets.RegionalObservations_End;
+    if (Progress.TomorrowsRegionalMap == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.RegionalForecast1_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.RegionalForecast1_Length = 0;
+    }
+    _PlayMsOffsets.RegionalForecast1_End = _PlayMsOffsets.RegionalForecast1_Start + _PlayMsOffsets.RegionalForecast1_Length;
+
+    //RegionalForecast2 (map)
+    _PlayMsOffsets.RegionalForecast2_Start = _PlayMsOffsets.RegionalForecast1_End;
+    if (Progress.TomorrowsRegionalMap == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.RegionalForecast2_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.RegionalForecast2_Length = 0;
+    }
+    _PlayMsOffsets.RegionalForecast2_End = _PlayMsOffsets.RegionalForecast2_Start + _PlayMsOffsets.RegionalForecast2_Length;
+
+    //Air Quality
+    _PlayMsOffsets.AirQuality_Start = _PlayMsOffsets.RegionalForecast2_End;
+    if (Progress.WordedForecast == LoadStatuses.Loaded && _WeatherParameters.AirQuality)
+    {
+        _PlayMsOffsets.AirQuality_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.AirQuality_Length = 0;
+    }
+    _PlayMsOffsets.AirQuality_End = _PlayMsOffsets.AirQuality_Start + _PlayMsOffsets.AirQuality_Length;
+
+    //Almanac
+    _PlayMsOffsets.Almanac_Start = _PlayMsOffsets.AirQuality_End;
+    if (Progress.Almanac == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.Almanac_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.Almanac_Length = 0;
+    }
+    _PlayMsOffsets.Almanac_End = _PlayMsOffsets.Almanac_Start + _PlayMsOffsets.Almanac_Length;
+
+    //Marine Forecast
+    _PlayMsOffsets.MarineForecast_Start = _PlayMsOffsets.Almanac_End;
+    if (Progress.WordedForecast == LoadStatuses.Loaded && _WeatherParameters.MarineForecast)
+    {
+        _PlayMsOffsets.MarineForecast_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.MarineForecast_Length = 0;
+    }
+    _PlayMsOffsets.MarineForecast_End = _PlayMsOffsets.MarineForecast_Start + _PlayMsOffsets.MarineForecast_Length;
+
+    //Almanac (Tides)
+    _PlayMsOffsets.AlmanacTides_Start = _PlayMsOffsets.MarineForecast_End;
+    if (Progress.Almanac == LoadStatuses.Loaded && _WeatherParameters.WeatherTides)
+    {
+        _PlayMsOffsets.AlmanacTides_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.AlmanacTides_Length = 0;
+    }
+    _PlayMsOffsets.AlmanacTides_End = _PlayMsOffsets.AlmanacTides_Start + _PlayMsOffsets.AlmanacTides_Length;
+
+    //LocalForecast (text)
+    _PlayMsOffsets.LocalForecast_Start = _PlayMsOffsets.AlmanacTides_End;
+    if (Progress.WordedForecast == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.LocalForecast_Length = LocalForecastScreenTexts.length * 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.LocalForecast_Length = 0;
+    }
+    _PlayMsOffsets.LocalForecast_End = _PlayMsOffsets.LocalForecast_Start + _PlayMsOffsets.LocalForecast_Length;
+
+    //Hazards (text)
+    _PlayMsOffsets.Hazards_Start = _PlayMsOffsets.LocalForecast_End;
     if (Progress.Hazards == LoadStatuses.Loaded && Hazards.length > 0)
     {
         _PlayMsOffsets.Hazards_Length = (((385 + cnvHazardsScroll.height()) / 385) * 13000) + 3000;
@@ -4193,6 +4165,42 @@ var AssignPlayMsOffsets = function (CalledFromProgress)
     }
     _PlayMsOffsets.Hazards_End = _PlayMsOffsets.Hazards_Start + _PlayMsOffsets.Hazards_Length;
 
+    //LatestObservations (text list)
+    _PlayMsOffsets.LatestObservations_Start = _PlayMsOffsets.Hazards_End;
+    if (Progress.NearbyConditions == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.LatestObservations_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.LatestObservations_Length = 0;
+    }
+    _PlayMsOffsets.LatestObservations_End = _PlayMsOffsets.LatestObservations_Start + _PlayMsOffsets.LatestObservations_Length;
+
+    //Outlook (almanac 2) (text)
+    _PlayMsOffsets.Outlook_Start = _PlayMsOffsets.LatestObservations_End;
+    if (Progress.Almanac == LoadStatuses.Loaded && _WeatherParameters.Outlook)
+    {
+        _PlayMsOffsets.Outlook_Length = 10000;
+    }
+    else
+    {
+        _PlayMsOffsets.Outlook_Length = 0;
+    }
+    _PlayMsOffsets.Outlook_End = _PlayMsOffsets.Outlook_Start + _PlayMsOffsets.Outlook_Length;
+
+    //TravelForecast (scroller)
+    _PlayMsOffsets.TravelForecast_Start = _PlayMsOffsets.Outlook_End;
+    if (Progress.TravelForecast == LoadStatuses.Loaded)
+    {
+        _PlayMsOffsets.TravelForecast_Length = 60000;
+    }
+    else
+    {
+        _PlayMsOffsets.TravelForecast_Length = 0;
+    }
+    _PlayMsOffsets.TravelForecast_End = _PlayMsOffsets.TravelForecast_Start + _PlayMsOffsets.TravelForecast_Length;
+    
     //Global offsets
     _PlayMsOffsets.Start = 0;
     _PlayMsOffsets.End = _PlayMsOffsets.Hazards_End;
