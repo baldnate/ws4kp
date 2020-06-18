@@ -11547,7 +11547,7 @@ var SmoothingEnabled = function (context, enable)
 {
     context.imageSmoothingEnabled = enable;
     context.webkitImageSmoothingEnabled = enable;
-    context.mozImageSmoothingEnabled = enable;
+    context.imageSmoothingEnabled = enable;
     context.msImageSmoothingEnabled = enable;
     context.oImageSmoothingEnabled = enable;
 };
