@@ -8878,6 +8878,10 @@ var WeatherTravelForecast = function (WeatherDwmlParser, ForceToday, ForceTonigh
 
 var PopulateTravelCities = function (WeatherParameters)
 {
+    if (WeatherParameters !== null) {
+        WeatherParameters.Progress.TravelForecast = LoadStatuses.Loaded;
+    }
+    return;
     if (WeatherParameters == null || (_DontLoadGifs == true && WeatherParameters.Progress.TravelForecast != LoadStatuses.Loaded))
     {
         return;
@@ -12614,6 +12618,7 @@ var GetNextMusicUrl = function ()
 
 var LoadAudio = function(Url)
 {
+    return;
     if (_AudioRefreshIntervalId)
     {
         window.clearIntervalWorker(_AudioRefreshIntervalId);
